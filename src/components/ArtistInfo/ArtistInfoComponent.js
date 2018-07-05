@@ -1,11 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import music from './../../assets/img/music.jpg';
 
 export default function ArtistInfoComponent(props) {
     const {
-        srcImg,
-        artistName,
-        trackName,
         currentTrack
     } = props;
     const TrackDescr = styled.div`
@@ -15,10 +13,11 @@ export default function ArtistInfoComponent(props) {
       align-items: center;
       color: white;
     `;
+    const src = currentTrack.album ? currentTrack.album.cover_big : music;
     return (
-        <div className='artistInfo'>
+        <div className='artistInfo shadow'>
             <div className='artistInfo__img'>
-                { currentTrack.album && <img src={currentTrack.album.cover_big} alt="track"/> }
+                {  <img src={src} alt="track"/> }
             </div>
             <TrackDescr>
                 <h4 className='artistInfo__artistName'>{currentTrack.artist && currentTrack.artist.name}</h4>

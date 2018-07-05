@@ -1,0 +1,192 @@
+.equalizer {
+  position: absolute;
+  bottom: 0;
+  left: -30px;
+  display: block;
+  width: 5.5px;
+  background-color: white;
+  height: 2.75px; }
+
+.equalizer,
+.equalizer::before,
+.equalizer::after {
+  animation: equalize 1.25s steps(25, end) 0s infinite; }
+
+.equalizer::before,
+.equalizer::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 6.875px;
+  height: 19.25px;
+  width: 5.5px;
+  background-color: white; }
+
+.equalizer::before {
+  animation-name: equalize2; }
+
+.equalizer::after {
+  left: 13.75px;
+  animation-name: equalize3; }
+
+@keyframes equalize {
+  0% {
+    height: 5.5px; }
+  4% {
+    height: 2.75px; }
+  8% {
+    height: 5.5px; }
+  12% {
+    height: 9.625px; }
+  16% {
+    height: 13.75px; }
+  20% {
+    height: 17.875px; }
+  24% {
+    height: 16.5px; }
+  28% {
+    height: 15.125px; }
+  32% {
+    height: 15.125px; }
+  36% {
+    height: 11.0px; }
+  40% {
+    height: 13.75px; }
+  44% {
+    height: 13.75px; }
+  48% {
+    height: 15.125px; }
+  52% {
+    height: 16.5px; }
+  56% {
+    height: 17.875px; }
+  60% {
+    height: 16.5px; }
+  64% {
+    height: 16.5px; }
+  68% {
+    height: 15.125px; }
+  72% {
+    height: 13.75px; }
+  76% {
+    height: 15.125px; }
+  80% {
+    height: 16.5px; }
+  84% {
+    height: 16.5px; }
+  88% {
+    height: 17.875px; }
+  92% {
+    height: 13.75px; }
+  96% {
+    height: 9.625px; }
+  100% {
+    height: 5.5px; } }
+
+@keyframes equalize2 {
+  0% {
+    height: 16.5px; }
+  4% {
+    height: 17.875px; }
+  8% {
+    height: 16.5px; }
+  12% {
+    height: 16.5px; }
+  16% {
+    height: 15.125px; }
+  20% {
+    height: 15.125px; }
+  24% {
+    height: 15.125px; }
+  28% {
+    height: 16.5px; }
+  32% {
+    height: 16.5px; }
+  36% {
+    height: 17.875px; }
+  40% {
+    height: 17.875px; }
+  44% {
+    height: 17.875px; }
+  48% {
+    height: 15.125px; }
+  52% {
+    height: 11.0px; }
+  56% {
+    height: 8.25px; }
+  60% {
+    height: 11.0px; }
+  64% {
+    height: 13.75px; }
+  68% {
+    height: 15.125px; }
+  72% {
+    height: 17.875px; }
+  76% {
+    height: 16.5px; }
+  80% {
+    height: 16.5px; }
+  84% {
+    height: 15.125px; }
+  88% {
+    height: 15.125px; }
+  92% {
+    height: 12.375px; }
+  96% {
+    height: 15.125px; }
+  100% {
+    height: 16.5px; } }
+
+@keyframes equalize3 {
+  0% {
+    height: 12.375px; }
+  4% {
+    height: 9.625px; }
+  8% {
+    height: 12.375px; }
+  12% {
+    height: 15.125px; }
+  16% {
+    height: 17.875px; }
+  20% {
+    height: 20.625px; }
+  24% {
+    height: 19.25px; }
+  28% {
+    height: 15.125px; }
+  32% {
+    height: 12.375px; }
+  36% {
+    height: 11.0px; }
+  40% {
+    height: 9.625px; }
+  44% {
+    height: 6.875px; }
+  48% {
+    height: 11.0px; }
+  52% {
+    height: 13.75px; }
+  56% {
+    height: 15.125px; }
+  60% {
+    height: 17.875px; }
+  64% {
+    height: 16.5px; }
+  68% {
+    height: 15.125px; }
+  72% {
+    height: 15.125px; }
+  76% {
+    height: 13.75px; }
+  80% {
+    height: 16.5px; }
+  84% {
+    height: 17.875px; }
+  88% {
+    height: 19.25px; }
+  92% {
+    height: 16.5px; }
+  96% {
+    height: 13.75px; }
+  100% {
+    height: 12.375px; } }

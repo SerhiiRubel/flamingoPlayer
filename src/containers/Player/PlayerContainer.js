@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component, Fragment} from 'react';
 import axios from 'axios';
 
 import TrackListComponent from "../../components/TrackList/TrackListComponent";
 import ArtistInfoComponent from "../../components/ArtistInfo/ArtistInfoComponent";
 import TrackControlsComponent from "../../components/TrackControls/TrackControlsComponent";
+import HeaderComponent from '../../components/Header/HeaderComponent';
+
+import flamingo from './../../assets/img/flamingo.gif';
+import music from './../../assets/img/music.jpg';
 
 
 export default class PlayerContainer extends Component {
@@ -25,10 +29,6 @@ export default class PlayerContainer extends Component {
     });
   }
 
-  getSnapshotBeforeUpdate() {
-
-  }
-
   componentDidUpdate() {
     if(this.audio) {
       this.audio.ontimeupdate = () => this.viewProgressTrack();
@@ -36,10 +36,17 @@ export default class PlayerContainer extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if(this.audio) {
+      this.audio.ontimeupdate = () => console.log('');
+      this.audio.onended= () => console.log('');
+    }
+  }
+
   render() {
-     const background = this.state.currentTrack.album ? `url(${this.state.currentTrack.album.cover_big})` : 'coral';
+     const background = this.state.currentTrack.album ? `url(${this.state.currentTrack.album.cover_big})` : `url(${music})`;
      return(
-         this.state.tracks.length !== 0 ?
+       this.state.tracks.length !== 0 ?
          <section className='flamingo'>
            <div
              className='flamingo__blurBg'
@@ -60,12 +67,13 @@ export default class PlayerContainer extends Component {
              audio={this.audio}
              isPlay={this.state.isPlay}
              progress={ this.state.progress }
+             setProgress={e => this.setProgressTrack(e)}
            />
          </section>
          :
          <div className='preload'>
            <h1>Music is loading or Heroku is crashed, please check your developer console!</h1>
-           <img src="" alt=""/>
+           <img src={flamingo} alt="flamingo"/>
          </div>
      );
   }
@@ -84,10 +92,10 @@ export default class PlayerContainer extends Component {
         this.audio.pause();
         this.updateState({isPlay: false});
         break;
-      case 'next':
+      case 'forward':
         this.changeTrack(1);
         break;
-      case 'prev':
+      case 'backward':
         this.changeTrack(-1);
         break;
       default:
@@ -99,7 +107,8 @@ export default class PlayerContainer extends Component {
     const currentTrack = this.state.tracks.filter( item => item.id === id );
     this.updateState({
       isPlay: true,
-      currentTrack: currentTrack[0]
+      currentTrack: currentTrack[0],
+      progress: 0
     });
   }
 
@@ -111,7 +120,7 @@ export default class PlayerContainer extends Component {
     } else if (i < 0) {
       i = tracks.length - 1;
     }
-    this.updateState({ currentTrack: tracks[i] });
+    this.updateState({ currentTrack: tracks[i], progress: 0 });
   }
 
   viewProgressTrack = () => {
@@ -120,7 +129,15 @@ export default class PlayerContainer extends Component {
       this.updateState({ progress });
   }
 
-  setProgressTrack = () => {
-
+  setProgressTrack = (e) => {
+    let el = e.target.classList.contains('timeLine') ? e.target : e.target.parentElement;
+    let width = el.clientWidth;
+    let rect = el.getBoundingClientRect();
+    let offsetX = e.clientX - rect.left;
+    let duration = this.audio.duration;
+    let newTime = (duration * offsetX) / width;
+    let progress = (newTime * 100) / duration;
+    this.audio.currentTime = newTime;
+    this.updateState({progress});
   }
 }

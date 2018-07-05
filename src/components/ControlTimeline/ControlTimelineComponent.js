@@ -1,22 +1,24 @@
 import React from 'react';
 
 export default function ControlTimeLineComponent(props) {
-    const {
-        currentTime,
-        endTime,
-        progress
-    } = props;
-
-    return (
-        <div className='progressBar'>
-            <span className='time'>{Math.floor(currentTime)}</span>
-            <div className='timeLine'>
-                <div
-                    className='timeLine__line'
-                    style={{width: `${progress}%`}}
-                > </div>
-            </div>
-            <span className='time'>{endTime}</span>
-        </div>
-    )
+  const {
+    currentTime,
+    endTime,
+    progress,
+    setProgress
+  } = props;
+  return (
+    <div className='progressBar'>
+      <span className='time shadow'>{Math.floor(currentTime)}</span>
+      <div
+        className='timeLine'
+        onClick={ e => setProgress(e) }>
+        <div
+          className='timeLine__line shadow'
+          style={{width: `${progress}%`}}
+        > </div>
+      </div>
+      <span className='time shadow'>{endTime}</span>
+    </div>
+  )
 }
