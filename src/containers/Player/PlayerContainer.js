@@ -64,7 +64,7 @@ class PlayerContainer extends Component {
              controlTrack={ type => this.controlTrack(type) }
              audio={this.audio}
              isPlay={this.state.isPlay}
-             progress={ this.state.progress }
+             progress={ this.props.progress }
              setProgress={this.setProgressTrack}
            />
          </section>
@@ -102,7 +102,6 @@ class PlayerContainer extends Component {
     this.props.getCurrentTrack(currentTrack[0]);
     this.setState({
       isPlay: true,
-      progress: 0
     });
   }
 
@@ -122,7 +121,7 @@ class PlayerContainer extends Component {
   viewProgressTrack = () => {
       let {currentTime, duration} = this.audio;
       let progress = currentTime * 100 / duration;
-      this.setState({ progress });
+      // this.props.progress( progress );
   }
 
   setProgressTrack = (e) => {
