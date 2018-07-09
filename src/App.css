@@ -21,7 +21,7 @@
   from {
     background-position: 0 0; }
   to {
-    background-position: 100% 0; } }
+    background-position: 0 100%; } }
 
 @keyframes App-logo-spin {
   from {
@@ -188,6 +188,5 @@ table {
 
 .loginPage {
   min-height: 100vh;
-  background: url("./assets/img/bgLoginPage.jpg") 0 0 repeat-y;
-  background-size: cover;
+  background: url("./assets/img/bgLoginPage.jpg") 0 0;
   animation: scroll linear 10s infinite; }

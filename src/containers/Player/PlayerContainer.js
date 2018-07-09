@@ -1,32 +1,28 @@
 import React, {Component, Fragment} from 'react';
-import axios from 'axios';
+
 
 import TrackListComponent from "../../components/TrackList/TrackListComponent";
 import ArtistInfoComponent from "../../components/ArtistInfo/ArtistInfoComponent";
 import TrackControlsComponent from "../../components/TrackControls/TrackControlsComponent";
-import HeaderComponent from '../../components/Header/HeaderComponent';
 
 import flamingo from './../../assets/img/flamingo.gif';
 import music from './../../assets/img/music.jpg';
+import getAllTracks from "../../actions/tracks";
+import getCurrentTrack from '../../actions/getCurrentTrack';
+import progress from '../../actions/progress';
+import {connect} from 'react-redux';
 
 
-export default class PlayerContainer extends Component {
+class PlayerContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tracks: [],
-      currentTrack: {},
-      progress: null,
       isPlay: false,
     }
   }
 
   componentDidMount() {
-    axios.get(`https://cors-anywhere.herokuapp.com/https://api.deezer.com/search/?q=2018`)
-      .then( response => this.setState({ tracks: response.data.data }))
-      .catch(error =>  {
-        console.log(error);
-    });
+    this.props.getAllTracks('2017');
   }
 
   componentDidUpdate() {
@@ -44,9 +40,10 @@ export default class PlayerContainer extends Component {
   }
 
   render() {
-     const background = this.state.currentTrack.album ? `url(${this.state.currentTrack.album.cover_big})` : `url(${music})`;
+    const {tracks, currentTrack} = this.props;
+    const background = currentTrack.album ? `url(${currentTrack.album.cover_big})` : `url(${music})`;
      return(
-       this.state.tracks.length !== 0 ?
+       tracks.isLoading === false ?
          <section className='flamingo'>
            <div
              className='flamingo__blurBg'
@@ -54,11 +51,12 @@ export default class PlayerContainer extends Component {
            > </div>
            <div className='flamingo__wrapperTracks'>
              <ArtistInfoComponent
-               currentTrack={this.state.currentTrack}
+               currentTrack={currentTrack}
              />
              <TrackListComponent
                playTrack={ id => this.playTrack(id) }
-               {...this.state}
+               tracks={tracks.tracks}
+               currentTrackId={currentTrack.id}
                audioRef={ el => this.audio = el }
              />
            </div>
@@ -67,7 +65,7 @@ export default class PlayerContainer extends Component {
              audio={this.audio}
              isPlay={this.state.isPlay}
              progress={ this.state.progress }
-             setProgress={e => this.setProgressTrack(e)}
+             setProgress={this.setProgressTrack}
            />
          </section>
          :
@@ -78,19 +76,15 @@ export default class PlayerContainer extends Component {
      );
   }
 
-  updateState(state) {
-    this.setState(state);
-  }
-
   controlTrack(type) {
     switch(type) {
       case 'play':
         this.audio ? this.audio.play() : this.playTrack(this.state.tracks[0].id);
-        this.updateState({isPlay: true});
+        this.setState({isPlay: true});
         break;
       case 'pause':
         this.audio.pause();
-        this.updateState({isPlay: false});
+        this.setState({isPlay: false});
         break;
       case 'forward':
         this.changeTrack(1);
@@ -104,29 +98,31 @@ export default class PlayerContainer extends Component {
   }
 
   playTrack = (id) => {
-    const currentTrack = this.state.tracks.filter( item => item.id === id );
-    this.updateState({
+    const currentTrack = this.props.tracks.tracks.filter( item => item.id === id );
+    this.props.getCurrentTrack(currentTrack[0]);
+    this.setState({
       isPlay: true,
-      currentTrack: currentTrack[0],
       progress: 0
     });
   }
 
   changeTrack = (id) => {
-    const {tracks, currentTrack} = this.state;
-    let i = tracks.indexOf(currentTrack) + id;
-    if(i >= tracks.length) {
+    const {tracks, currentTrack, getCurrentTrack} = this.props;
+    let curr = tracks.tracks.filter( (item) =>  item.id === currentTrack.id);
+    let i = tracks.tracks.indexOf(curr[0]) + id;
+    if(i >= tracks.tracks.length) {
       i = 0;
     } else if (i < 0) {
-      i = tracks.length - 1;
+      i = tracks.tracks.length - 1;
     }
-    this.updateState({ currentTrack: tracks[i], progress: 0 });
+    getCurrentTrack(tracks.tracks[i]);
+    this.setState({ progress: 0 });
   }
 
   viewProgressTrack = () => {
       let {currentTime, duration} = this.audio;
       let progress = currentTime * 100 / duration;
-      this.updateState({ progress });
+      this.setState({ progress });
   }
 
   setProgressTrack = (e) => {
@@ -138,6 +134,18 @@ export default class PlayerContainer extends Component {
     let newTime = (duration * offsetX) / width;
     let progress = (newTime * 100) / duration;
     this.audio.currentTime = newTime;
-    this.updateState({progress});
+    this.props.progress(progress);
   }
 }
+
+const mapStateToProps = store => {
+  const {tracks, currentTrack, progress, isPlay} = store;
+  return {
+    tracks,
+    currentTrack,
+    progress,
+    isPlay
+  }
+};
+
+export default connect(mapStateToProps,{getAllTracks, getCurrentTrack, progress })(PlayerContainer);

@@ -7,11 +7,11 @@ export default function TrackItemComponent(props) {
     title,
     number,
     playTrack,
-    currentTrack,
+    currentTrackId,
     preview,
     audioRef,
   } = props;
-  const isPlay = currentTrack && currentTrack === id;
+  const isPlay = currentTrackId && currentTrackId === id;
   return (
     <li
       className='trackItem' style={{position: 'relative'}} onClick={ () => playTrack(id) }>

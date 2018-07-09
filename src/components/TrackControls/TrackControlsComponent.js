@@ -34,7 +34,7 @@ export default function TrackControlsComponent(props) {
     <ControlTimeLineComponent
       currentTime={currentTime}
       progress={progress}
-      setProgress={e => setProgress(e)}
+      setProgress={setProgress}
       endTime={endTime}
     />
     </div>

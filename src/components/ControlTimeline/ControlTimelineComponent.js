@@ -12,7 +12,7 @@ export default function ControlTimeLineComponent(props) {
       <span className='time shadow'>{Math.floor(currentTime)}</span>
       <div
         className='timeLine'
-        onClick={ e => setProgress(e) }>
+        onClick={ setProgress }>
         <div
           className='timeLine__line shadow'
           style={{width: `${progress}%`}}

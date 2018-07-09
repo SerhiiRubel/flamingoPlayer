@@ -5,7 +5,7 @@ import TrackItemComponent from "../TrackItem/TrackItemComponent";
 export default function TrackListComponent(props) {
   const {
     tracks,
-    currentTrack,
+    currentTrackId,
     playTrack,
     audioRef,
   } = props;
@@ -15,7 +15,7 @@ export default function TrackListComponent(props) {
       id={item.id}
       number={index + 1}
       title={item.title}
-      currentTrack={currentTrack.id}
+      currentTrackId={currentTrackId}
       preview={item.preview}
       playTrack={ id => playTrack(id) }
       audioRef={audioRef}
