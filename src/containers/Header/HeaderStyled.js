@@ -21,6 +21,21 @@ const HeaderStyled = styled.header`
       }
     }
   }
+  form {
+    width: 400px;
+    display: flex;
+    margin-left: 50%;
+    transform: translateX(-100%);
+    input {
+      display: block;
+      width: 100%;
+      padding: 40px 10px;
+      box-sizing: border-box;
+      outline-color: coral;
+      font-size: 20px;
+      color: coral;
+    }
+  }
 `;
 
 export default HeaderStyled;

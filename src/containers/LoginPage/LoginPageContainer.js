@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+
+import './style.css';
+
 import LoginFormComponent from '../../components/loginForm/loginFormComponent';
 import {connect} from 'react-redux';
 import fetchAuth from '../../actions/auth';
@@ -10,15 +13,13 @@ class LoginPageContainer extends Component{
   };
 
   onSubmit = values => {
-    console.log(values);
     this.props.fetchAuth(values);
+    setTimeout( () => this.props.history.push("/"), 2000);
   };
 
   render() {
     return (
-      <section className='loginPage'
-        style={{display: 'flex', alignItems: 'center'}}
-      >
+      <section className='loginPage'>
         <LoginFormComponent
           onSubmit={this.onSubmit}
         />

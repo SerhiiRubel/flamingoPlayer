@@ -1,6 +1,12 @@
 import types from "../types/tracks";
 
-export default function tracks(state = {}, action) {
+const initialState = {
+  tracks: [],
+  isLoading: false,
+  err: null,
+};
+
+export default function tracks(state = initialState, action) {
   switch(action.type) {
     case types.GET_ALL_TRACKS_REQUEST:
       return {
@@ -18,6 +24,11 @@ export default function tracks(state = {}, action) {
         ...state,
         isLoading: false,
         err: action.payload
+      };
+    case types.DEL_FOUND_TRACK:
+      return {
+        ...state,
+        tracks: [...state.tracks.filter( item => item.id !== action.payload)]
       };
     default: return state;
   }

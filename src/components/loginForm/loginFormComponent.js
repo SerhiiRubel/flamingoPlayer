@@ -1,7 +1,8 @@
 import React from 'react';
+import LoginFormStyled from './loginFormStyled';
 import {reduxForm} from 'redux-form';
 import {Field} from 'redux-form';
-import required from "../../utils/validate";
+import {required, email, number, minLength3, maxLength15} from '../../utils/validate';
 
 // const validate = values => {
 //     const errors = {};
@@ -15,39 +16,45 @@ import required from "../../utils/validate";
 // };
 
 const renderField = ({ input, meta }) => {
-    console.log(meta.error);
-    return (
-        <div>
-            <label htmlFor="login">Login</label>
-            <input
-                {...input}
-            />
-        </div>
-    )
+  const {name} = input;
+  const { visited, number, dirty, touched, error, invalid } = meta;
+  return (
+    <div className={`inputGroup ${name}`}>
+      <label htmlFor={name}>{name}</label>
+      <input
+        {...input}
+      />
+      {
+        visited && invalid &&
+        <p className="error">{error}</p>
+      }
+    </div>
+  )
 };
 
 let LoginFormComponent = (props) => {
-    return(
-        <form onSubmit={props.handleSubmit}>
-            <Field
-                name='email'
-                component={renderField}
-                type='text'
-                placeholder='login'
-                validate={required}
-            />
-            <Field
-                name='password'
-                component={renderField}
-                type='text'
-                placeholder='password'
-                validate={required}
-            />
-            <button
-                type='submit'
-            >Submit</button>
-        </form>
-    )
+  const { handleSubmit, valid, reset, submitting } = props;
+  return(
+    <LoginFormStyled onSubmit={handleSubmit}>
+      <Field
+        name='email'
+        component={renderField}
+        type='email'
+        validate={[ required, email, minLength3, maxLength15]}
+      />
+      <Field
+        name='password'
+        component={renderField}
+        type='password'
+        validate={[ required, minLength3, maxLength15, number ]}
+      />
+      <button
+        type='submit'
+        disabled={!valid}
+        // onClick={reset}
+      >Submit</button>
+    </LoginFormStyled>
+  );
 };
 
 LoginFormComponent = reduxForm({

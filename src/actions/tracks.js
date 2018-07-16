@@ -18,6 +18,16 @@ const getAllTracks = query => {
         });
       });
   }
+};
+
+const deleteFoundTrack = id => {
+  return {
+    type: types.DEL_FOUND_TRACK,
+    payload: id
+  }
 }
 
-export default getAllTracks;
+export {
+  getAllTracks,
+  deleteFoundTrack,
+};

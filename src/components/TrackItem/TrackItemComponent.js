@@ -1,10 +1,12 @@
 import React from 'react';
 import './../../assets/scss/googlePlayEqualizer.css';
+import ControlButton from "../../core/components/ControlButton/ControlButton";
 
 export default function TrackItemComponent(props) {
   const {
     id,
     title,
+    controlTrack,
     number,
     playTrack,
     currentTrackId,
@@ -19,7 +21,12 @@ export default function TrackItemComponent(props) {
         <div className="equalizer shadow"> </div>
       }
       <span>{number}.</span>
-      {title}
+      <p>{title}</p>
+      <ControlButton
+        type={'trash-alt'}
+        id={id}
+        controlTrack={controlTrack}
+      />
       { isPlay &&
         <audio
           src={`${preview}`}

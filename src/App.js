@@ -1,24 +1,27 @@
 import React, {Fragment} from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
-import './App.css';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import './assets/scss/App.css';
 import PlayerContainer from "./containers/Player/PlayerContainer";
-import HeaderComponent from './components/Header/HeaderComponent';
+import HeaderComponent from './containers/Header/HeaderContainer';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlay, faBackward, faForward, faPause } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faBackward, faForward, faPause, faPlusSquare, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import LoginPageContainer from "./containers/LoginPage/LoginPageContainer";
-library.add(faPlay, faBackward, faForward, faPause);
+import {PrivateRoute} from "./containers/Authentication/AuthenticationContainer";
+library.add(faPlay, faBackward, faForward, faPause, faPlusSquare, faTrashAlt);
 
 function App() {
-      return (
-        <BrowserRouter>
-          <Fragment>
-            <HeaderComponent />
-            <Route exact path='/' component={PlayerContainer}/>
-            <Route path='/login' component={LoginPageContainer}/>
-          </Fragment>
-        </BrowserRouter>
-      );
+  return (
+    <BrowserRouter>
+      <Fragment>
+        <HeaderComponent />
+        <Switch>
+          <PrivateRoute exact path='/' component={PlayerContainer}/>
+          <Route path='/login' component={LoginPageContainer}/>
+        </Switch>
+      </Fragment>
+    </BrowserRouter>
+  );
 }
 
 export default App;

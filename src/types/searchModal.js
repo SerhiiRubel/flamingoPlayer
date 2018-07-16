@@ -1,0 +1,5 @@
+const IDENTIFIER = `SEARCH_MODAL/`;
+
+const TOGGLE_MODAL = `${IDENTIFIER}TOGGLE_MODAL`;
+
+export default TOGGLE_MODAL;

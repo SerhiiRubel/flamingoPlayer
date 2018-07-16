@@ -107,26 +107,48 @@ table {
   .flamingo__wrapperTracks {
     display: flex; }
 
-.artistInfo {
-  margin-right: 50px; }
-  .artistInfo img {
-    animation: opacity 10s linear;
-    width: 500px;
-    height: 500px;
-    object-fit: cover; }
+.artistInfo img {
+  animation: opacity 10s linear;
+  width: 500px;
+  height: 500px;
+  object-fit: cover; }
 
 .trackList {
-  padding: 15px 0 15px 45px;
+  padding: 15px 0 15px 70px;
   max-height: 450px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  min-width: 300px;
+  max-width: 400px; }
+  .trackList h3 {
+    padding: 50% 15px;
+    text-align: center;
+    color: white;
+    font-size: 35px; }
 
 .trackItem {
   color: white;
   text-shadow: 1px 1px gray;
   margin-bottom: 15px;
-  cursor: pointer; }
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative; }
+  .trackItem p {
+    flex: 1;
+    max-width: 85%; }
+  .trackItem button {
+    opacity: 0;
+    position: absolute;
+    right: -20px;
+    transition: .3s;
+    font-size: 18px;
+    color: coral; }
   .trackItem:hover {
     color: black; }
+  .trackItem:hover button {
+    opacity: 1;
+    right: 10px; }
   .trackItem span {
     margin-right: 10px; }
 
@@ -188,5 +210,5 @@ table {
 
 .loginPage {
   min-height: 100vh;
-  background: url("./assets/img/bgLoginPage.jpg") 0 0;
+  background: url("../img/bgLoginPage.jpg") 0 0;
   animation: scroll linear 10s infinite; }

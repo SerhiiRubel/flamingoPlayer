@@ -19,11 +19,13 @@ const Button = styled.button`
 export default function ControlButton(props) {
   const {
     type,
+    id,
+    controlTrack
   } = props;
   return (
     <Button
-      onClick={ () =>  {
-        props.controlTrack(type)} }
+      onClick={ (e) =>  {
+        controlTrack(e, type, id)} }
     >
       <FontAwesomeIcon
         className={`shadow ${type}`}

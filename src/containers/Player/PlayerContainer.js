@@ -1,49 +1,35 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component } from 'react';
 
 
-import TrackListComponent from "../../components/TrackList/TrackListComponent";
+import TrackListContainer from "../TrackList/TrackListContainer";
 import ArtistInfoComponent from "../../components/ArtistInfo/ArtistInfoComponent";
-import TrackControlsComponent from "../../components/TrackControls/TrackControlsComponent";
+import TrackControlsContainer from "../TrackControls/TrackControlsContainer";
+import SearchModal from '../../components/SearchModal/SearchModal';
 
 import flamingo from './../../assets/img/flamingo.gif';
 import music from './../../assets/img/music.jpg';
-import getAllTracks from "../../actions/tracks";
-import getCurrentTrack from '../../actions/getCurrentTrack';
-import progress from '../../actions/progress';
+import {getAllTracks, deleteFoundTrack} from "../../actions/tracks";
+import toggleSearchModal from '../../actions/toogleSearchModal';
+import userPlaylist from '../../actions/userPlaylist';
 import {connect} from 'react-redux';
 
 
 class PlayerContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isPlay: false,
-    }
-  }
-
-  componentDidMount() {
-    this.props.getAllTracks('2017');
   }
 
   componentDidUpdate() {
-    if(this.audio) {
-      this.audio.ontimeupdate = () => this.viewProgressTrack();
-      this.audio.onended = () => this.changeTrack(1);
-    }
-  }
-
-  componentWillUnmount() {
-    if(this.audio) {
-      this.audio.ontimeupdate = () => console.log('');
-      this.audio.onended= () => console.log('');
+    const { toggleSearchModal, tracks } = this.props;
+    if(tracks.length === 0 ) {
+      toggleSearchModal(false);
     }
   }
 
   render() {
-    const {tracks, currentTrack} = this.props;
+    const { tracks, currentTrack, isLoading, toggleSearchModal, isOpenModal} = this.props;
     const background = currentTrack.album ? `url(${currentTrack.album.cover_big})` : `url(${music})`;
      return(
-       tracks.isLoading === false ?
          <section className='flamingo'>
            <div
              className='flamingo__blurBg'
@@ -53,98 +39,44 @@ class PlayerContainer extends Component {
              <ArtistInfoComponent
                currentTrack={currentTrack}
              />
-             <TrackListComponent
-               playTrack={ id => this.playTrack(id) }
-               tracks={tracks.tracks}
-               currentTrackId={currentTrack.id}
-               audioRef={ el => this.audio = el }
-             />
+             <TrackListContainer />
            </div>
-           <TrackControlsComponent
-             controlTrack={ type => this.controlTrack(type) }
+           <TrackControlsContainer
              audio={this.audio}
-             isPlay={this.state.isPlay}
-             progress={ this.props.progress }
-             setProgress={this.setProgressTrack}
+           />
+           <SearchModal
+            isLoading={isLoading}
+            tracks={tracks}
+            toggleModal={() => toggleSearchModal(false)}
+            isOpenModal={isOpenModal}
+            controlTrack={ (e, item,id) => this.controlTrack(e, item,id) }
            />
          </section>
-         :
-         <div className='preload'>
-           <h1>Music is loading or Heroku is crashed, please check your developer console!</h1>
-           <img src={flamingo} alt="flamingo"/>
-         </div>
+         // :
+         // <div className='preload'>
+         //   <h1>Music is loading or Heroku is crashed, please check your developer console!</h1>
+         //   <img src={flamingo} alt="flamingo"/>
+         // </div>
      );
   }
 
-  controlTrack(type) {
-    switch(type) {
-      case 'play':
-        this.audio ? this.audio.play() : this.playTrack(this.state.tracks[0].id);
-        this.setState({isPlay: true});
-        break;
-      case 'pause':
-        this.audio.pause();
-        this.setState({isPlay: false});
-        break;
-      case 'forward':
-        this.changeTrack(1);
-        break;
-      case 'backward':
-        this.changeTrack(-1);
-        break;
-      default:
-        break;
-    }
+  controlTrack = (e, type, id) => {
+    const {tracks, userPlaylist, deleteFoundTrack} = this.props;
+    let track = tracks.filter( item => item.id === id );
+    userPlaylist('add', track[0]);
+    deleteFoundTrack(id);
   }
 
-  playTrack = (id) => {
-    const currentTrack = this.props.tracks.tracks.filter( item => item.id === id );
-    this.props.getCurrentTrack(currentTrack[0]);
-    this.setState({
-      isPlay: true,
-    });
-  }
-
-  changeTrack = (id) => {
-    const {tracks, currentTrack, getCurrentTrack} = this.props;
-    let curr = tracks.tracks.filter( (item) =>  item.id === currentTrack.id);
-    let i = tracks.tracks.indexOf(curr[0]) + id;
-    if(i >= tracks.tracks.length) {
-      i = 0;
-    } else if (i < 0) {
-      i = tracks.tracks.length - 1;
-    }
-    getCurrentTrack(tracks.tracks[i]);
-    this.setState({ progress: 0 });
-  }
-
-  viewProgressTrack = () => {
-      let {currentTime, duration} = this.audio;
-      let progress = currentTime * 100 / duration;
-      // this.props.progress( progress );
-  }
-
-  setProgressTrack = (e) => {
-    let el = e.target.classList.contains('timeLine') ? e.target : e.target.parentElement;
-    let width = el.clientWidth;
-    let rect = el.getBoundingClientRect();
-    let offsetX = e.clientX - rect.left;
-    let duration = this.audio.duration;
-    let newTime = (duration * offsetX) / width;
-    let progress = (newTime * 100) / duration;
-    this.audio.currentTime = newTime;
-    this.props.progress(progress);
-  }
 }
 
+
 const mapStateToProps = store => {
-  const {tracks, currentTrack, progress, isPlay} = store;
+  const {tracks, isOpenModal, playlist} = store;
   return {
-    tracks,
-    currentTrack,
-    progress,
-    isPlay
+    ...tracks,
+    currentTrack: playlist.currentTrack,
+    isOpenModal,
   }
 };
 
-export default connect(mapStateToProps,{getAllTracks, getCurrentTrack, progress })(PlayerContainer);
+export default connect(mapStateToProps,{ getAllTracks, toggleSearchModal, userPlaylist, deleteFoundTrack })(PlayerContainer);
